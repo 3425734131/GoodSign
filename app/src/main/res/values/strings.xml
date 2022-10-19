@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">好签助手</string>
+    <string name="account">手&#8194;机&#8194;号:</string>
+    <string name="password">密&#12288;&#12288;码:</string>
+    <string name="login">超星账号登陆</string>
+</resources>

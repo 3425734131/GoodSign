@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.example.chaomianqiandao"
+        minSdk 26
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    //okHttp框架
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    //阿里巴巴fastJson框架
+    implementation 'com.alibaba:fastjson:1.1.72.android'
+    //RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    //AppCompatActivity
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    //Glide框架
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    //识别二维码
+    implementation 'cn.bingoogolapple:bga-qrcode-zxing:1.3.7'
+    //正在加载对话框框架
+    implementation 'com.github.limxing:Android-PromptDialog:1.1.3'
+    implementation 'com.google.android.material:material:1.4.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+}

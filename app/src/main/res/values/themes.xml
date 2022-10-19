@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ChaoMianQianDao" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+        <!-- Customize your theme here. -->
+
+    </style>
+    <style name="Progress_circle_acting">
+
+        <item name="android:indeterminateDrawable">@drawable/ratate_progress_bar</item>
+
+        <item name="android:minWidth">20dp</item>
+
+        <item name="android:minHeight">20dp</item>
+
+        <item name="android:maxWidth">60dp</item>
+
+        <item name="android:maxHeight">60dp</item>
+
+    </style>
+
+</resources>

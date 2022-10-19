@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_height"
+    >
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/pb_loading"
+        style="@style/Progress_circle_acting"
+        android:layout_gravity="center_vertical"
+        android:layout_width="24dp"
+        android:indeterminateDuration="900"
+        android:layout_marginLeft="64dp"
+        android:layout_height="24dp" />
+    <ImageView
+        android:id="@+id/iv_tip"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/completed"
+        android:layout_width="24dp"
+        android:layout_marginLeft="64dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载更多"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="#666"
+        android:textSize="14sp"
+        />
+
+</FrameLayout>
