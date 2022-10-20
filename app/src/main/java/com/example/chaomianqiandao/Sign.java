@@ -120,9 +120,6 @@ public class Sign extends AppCompatActivity {
         }
     };
     private String aid;
-    private String courseId;
-    private String classId;
-    private String cpi;
     private String sign_code;
     private String content;
     private EditText address;
@@ -140,12 +137,10 @@ public class Sign extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
         TextView sign_name=findViewById(R.id.sign_name);
+        TextView sign_course_name=findViewById(R.id.sign_course_name);
         Intent intent=getIntent();
-
+        sign_course_name.setText(intent.getStringExtra("name"));
         aid = intent.getStringExtra("aid");
-        courseId = String.valueOf(intent.getLongExtra("courseId",0));
-        classId = String.valueOf(getIntent().getLongExtra("classId",0));
-        cpi = String.valueOf(getIntent().getLongExtra("cpi",0));
         sign_code = String.valueOf(getIntent().getStringExtra("sign_code"));
         tv_sign_code = findViewById(R.id.sign_code);
         content = getIntent().getStringExtra("content");
@@ -265,7 +260,7 @@ public class Sign extends AppCompatActivity {
 
 
     String getReferer(){
-        return "https://mobilelearn.chaoxing.com/newsign/preSign?courseId=" + courseId + "&classId=" + classId + "&activePrimaryId=" + aid + "&general=1&sys=1&ls=1&appType=15&tid=&uid=" + mFirstApplication.infoMap.get("uid")+ "&ut=s";
+        return getIntent().getStringExtra("url");
     }
 
     //将字符串改编码
@@ -288,21 +283,15 @@ public class Sign extends AppCompatActivity {
             startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"),
                     TAKE_PHOTO);
         } else {
-//            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             Intent intent = new Intent(Intent.ACTION_PICK);
-//            intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
             startActivityForResult(intent, TAKE_PHOTO);
         }
     }
 
     private void uploadImage(String path) {
-        if(token==null){
-            token="c3b81879105102e140f0b7c46a7b0305";
-        }
         promptDialog.showLoading("上传图片中...");
         String url_upload="https://pan-yz.chaoxing.com/upload?_token="+token;
-        Log.e("upload",url_upload);
         File file=new File(path);
         Bitmap bitmap= BitmapFactory.decodeFile(path);
         int width=bitmap.getWidth();

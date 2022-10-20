@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".Sign">
     <TextView
+        android:id="@+id/sign_course_name"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

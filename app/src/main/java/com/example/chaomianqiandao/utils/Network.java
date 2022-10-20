@@ -80,38 +80,11 @@ public class Network {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                //上传完图片即删除
+                file.delete();
             }
         }.start();
     }
-
-//    public static void postFile( String houzui, File file, Handler handler, int what){
-//
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                RequestBody body= new MultipartBody.Builder()
-//                        .setType(MultipartBody.FORM)
-//                        .addFormDataPart("file", file.getName(),
-//                                RequestBody.create(MediaType.parse("multipart/form-data"),file))
-//                        .build();
-//                Log.e("Network",file.getPath());
-//                Request request=new Request.Builder().url(houzui).addHeader("token",mFirstApplication.infoMap.get("token")).post(body).build();
-//                Call call=okHttpClient.newCall(request);
-//                try {
-//                    Response response=call.execute();
-//                    ResponseInfo responseInfo=new ResponseInfo(response.headers().toString(),response.body().string());
-//                    Message message=Message.obtain();
-//                    message.what=what;
-//                    message.obj=responseInfo;
-//                    if(handler!=null){
-//                        handler.sendMessage(message);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-//    }
 
     public static void firstLogin(String url,Handler handler,int what){
 
@@ -136,32 +109,4 @@ public class Network {
             }
         }.start();
     }
-//    public static void postSync(String json,String houzui,Handler handler,int what){
-//
-//        new Thread(){
-//            @Override
-//            public void run() {
-//
-//                RequestBody body=RequestBody.create(MediaType.parse("application/json"),json);
-//
-//                Request request=new Request.Builder().url(houzui).post(body).addHeader("token",mFirstApplication.infoMap.get("token")).build();
-//                Call call=okHttpClient.newCall(request);
-//                try {
-//                    Response response=call.execute();
-//                    String bodyS=response.body().string();
-//                    Log.e("sd",bodyS);
-//                    ResponseInfo responseInfo=new ResponseInfo(response.headers().toString(),bodyS);
-//                    Message message=Message.obtain();
-//                    message.what=what;
-//                    message.obj=responseInfo;
-//                    if(handler!=null){
-//                        handler.sendMessage(message);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-//    }
-
 }

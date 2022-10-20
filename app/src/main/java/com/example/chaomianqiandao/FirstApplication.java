@@ -17,6 +17,5 @@ public class FirstApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mFirstApplication=this;
-
     }
 }

@@ -13,7 +13,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,10 @@ import com.example.chaomianqiandao.utils.Network;
 import com.example.chaomianqiandao.utils.ResponseInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import me.leefeng.promptlibrary.PromptDialog;
 
 public class CourseList extends AppCompatActivity {
 
@@ -41,6 +43,10 @@ public class CourseList extends AppCompatActivity {
     private final static String TAG="Course_List";
     private List<ChannelList> mList;
     private FirstApplication mFirstApplication=FirstApplication.getInstance();
+    private HashMap<String, String> aid_url=new HashMap<>();
+    private HashMap<String, String> courseId_name =new HashMap<>();
+    private HashMap<String, String> aid_course=new HashMap<>();
+    private JSONArray array;
     @SuppressLint("HandlerLeak")
     private final Handler handler=new Handler(){
         @Override
@@ -52,27 +58,15 @@ public class CourseList extends AppCompatActivity {
                     Log.e(TAG,info.BodyInfo);
                     mList=new ArrayList<>();
                     JSONObject jsonObject= JSONObject.parseObject(info.BodyInfo);
-                    JSONArray array = jsonObject.getJSONArray("channelList");
-                    for(int i=0;i<array.size();i++){
-                        ChannelList temp=array.getObject(i,ChannelList.class);
-                        if(temp.getContent().getRoletype()==3&&temp.getContent().getState()==0){
-                            mList.add(temp);
-                            Content content=temp.getContent();
-                            Data data=content.getCourse().getData().get(0);
-                            StringBuilder url=new StringBuilder("https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId=");
-                            url.append(data.getId()).append("&classId=");
-                            url.append(content.getId()).append("&uid=");
-                            url.append(mFirstApplication.infoMap.get("uid")).append("&cpi=")
-                                    .append(content.getCpi());
-                            Network.getSync(url.toString(),handler,Get_TaskList);
-                        }
-                    }
+                    array = jsonObject.getJSONArray("channelList");
+                    detectSign();
                     mRecyclerView.setAdapter(new MyAdapter());
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(CourseList.this));
                     break;
                 case Get_TaskList:
                     ResponseInfo info1=(ResponseInfo) msg.obj;
                     JSONObject jsonObject1= JSONObject.parseObject(info1.BodyInfo);
+                    Log.e(TAG,info1.BodyInfo);
                     List<ActiveList> mTaskList=jsonObject1.getJSONArray("activeList").toJavaList(ActiveList.class);
                     for(int i=0;i<mTaskList.size();i++){
                         if(i>2){
@@ -82,8 +76,17 @@ public class CourseList extends AppCompatActivity {
                         ActiveList activeList=mTaskList.get(i);
                         if (activeList.getActiveType()==2&&activeList.getStatus()==1){   //活动为签到  签到未结束
                             Toast.makeText(mFirstApplication, "发现签到！", Toast.LENGTH_SHORT).show();
-                            Log.e(TAG,"发现签到！！！");
                             String url="https://mobilelearn.chaoxing.com/newsign/signDetail?activePrimaryId="+activeList.getId()+"&type=1";
+                            aid_url.put(activeList.getId(),activeList.getUrl());
+                            //方法有点复杂 获取courseId
+                            String courseId=activeList.getUrl().substring(activeList.getUrl().indexOf("?")+1);
+                            for(String x : courseId.split("&")){
+                                if(x.startsWith("courseId=")){
+                                    courseId=x.substring(x.indexOf("=")+1);
+                                    break;
+                                }
+                            }
+                            aid_course.put(activeList.getId(),courseId);
                             Network.getSync(url,handler,Get_Type);
                             break;
                         }
@@ -135,10 +138,9 @@ public class CourseList extends AppCompatActivity {
                     }
                     //activeId
                     intent.putExtra("aid",jsonObject2.getString("id"));
-                    intent.putExtra("courseId",getIntent().getLongExtra("courseId",0));
-                    intent.putExtra("classId",getIntent().getLongExtra("classId",0));
-                    intent.putExtra("cpi",getIntent().getLongExtra("cpi",0));
+                    intent.putExtra("url",aid_url.get(jsonObject2.getString("id")));
                     //签到码  签到手势或者签到码
+                    intent.putExtra("name",courseId_name.get(aid_course.get(jsonObject2.getString("id"))));
                     intent.putExtra("sign_code",jsonObject2.getString("signCode"));
                     startActivity(intent);
                     break;
@@ -146,11 +148,38 @@ public class CourseList extends AppCompatActivity {
         }
     };
 
+    private void detectSign() {
+        for(int i = 0; i< array.size(); i++){
+            ChannelList temp= array.getObject(i,ChannelList.class);
+            if(temp.getContent().getRoletype()==3&&temp.getContent().getState()==0){
+                mList.add(temp);
+                Content content=temp.getContent();
+                Data data=content.getCourse().getData().get(0);
+                StringBuilder url=new StringBuilder("https://mobilelearn.chaoxing.com/ppt/activeAPI/taskactivelist?courseId=");
+                url.append(data.getId()).append("&classId=");
+                url.append(content.getId()).append("&uid=");
+                url.append(mFirstApplication.infoMap.get("uid")).append("&cpi=")
+                        .append(content.getCpi());
+                courseId_name.put(String.valueOf(data.getId()),data.getName());
+                Network.getSync(url.toString(),handler,Get_TaskList);
+            }
+        }
+    }
+
+    private PromptDialog promptDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
         mRecyclerView = findViewById(R.id.course_list);
+        promptDialog = new PromptDialog(this);
+        findViewById(R.id.fresh).setOnClickListener(v -> {
+            promptDialog.showLoading("正在刷新...");
+            detectSign();
+            //延迟提示成功哈哈！
+            promptDialog.showSuccessDelay("刷新成功！",500);
+        });
         //获取课程列表
         Network.getSync("http://mooc1-api.chaoxing.com/mycourse/backclazzdata",handler,Get_CourseList);
     }

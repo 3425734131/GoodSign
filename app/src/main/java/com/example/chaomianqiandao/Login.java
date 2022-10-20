@@ -24,12 +24,12 @@ import java.util.List;
 import me.leefeng.promptlibrary.PromptDialog;
 import okhttp3.Headers;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private EditText et_account;
     private EditText et_password;
     private final static int Login=100;
-    private String TAG="MainActivity";
+    private String TAG="Login";
     private FirstApplication mFirstApplication=FirstApplication.getInstance();
 
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         mFirstApplication.infoMap.put("uid",uid);
                         mFirstApplication.infoMap.put("cookies",cookies.toString());
-                        Intent intent=new Intent(MainActivity.this,CourseList.class);
+                        Intent intent=new Intent(com.example.chaomianqiandao.Login.this,CourseList.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                         promptDialog.showSuccess("登陆成功，等待跳转！");

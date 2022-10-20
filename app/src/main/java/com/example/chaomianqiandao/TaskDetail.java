@@ -37,6 +37,7 @@ import com.example.chaomianqiandao.utils.ResponseInfo;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TaskDetail extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class TaskDetail extends AppCompatActivity {
     private final static String TAG="Task_List";
     private List<ActiveList> mList;
     private FirstApplication mFirstApplication=FirstApplication.getInstance();
+    private HashMap<String, String> aid_url=new HashMap<>();
     @SuppressLint("HandlerLeak")
     private final Handler handler=new Handler(){
         @Override
@@ -107,9 +109,8 @@ public class TaskDetail extends AppCompatActivity {
                     }
                     //activeId
                     intent.putExtra("aid",jsonObject1.getString("id"));
-                    intent.putExtra("courseId",getIntent().getLongExtra("courseId",0));
-                    intent.putExtra("classId",getIntent().getLongExtra("classId",0));
-                    intent.putExtra("cpi",getIntent().getLongExtra("cpi",0));
+                    intent.putExtra("url",aid_url.get(jsonObject1.getString("id")));
+                    intent.putExtra("name",getIntent().getStringExtra("name"));
                     //签到码  签到手势或者签到码
                     intent.putExtra("sign_code",jsonObject1.getString("signCode"));
                     startActivity(intent);
@@ -174,6 +175,7 @@ public class TaskDetail extends AppCompatActivity {
             ActiveList activeList=mList.get(position);
             holder.course.setText(activeList.getNameOne());
             holder.teacher.setText(activeList.getNameTwo());
+            aid_url.put(activeList.getId(),activeList.getUrl());
             Glide.with(TaskDetail.this)
                     .load(activeList.getPicUrl())
                     .asBitmap()
