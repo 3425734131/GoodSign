@@ -40,6 +40,9 @@
             android:name=".CodeScanning"
             android:exported="true" />
         <activity
+            android:name=".utils.ClipImageActivity"
+            android:exported="true" />
+        <activity
             android:name=".Login"
             android:exported="true">
             <intent-filter>

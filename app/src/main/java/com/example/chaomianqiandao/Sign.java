@@ -3,7 +3,6 @@ package com.example.chaomianqiandao;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -42,78 +41,77 @@ import me.leefeng.promptlibrary.PromptDialog;
 public class Sign extends AppCompatActivity {
 
     private int type;
-    private final static int SIGN0=100;
-    private final static int SIGN1=101;
-    private final static int SIGN4=104;
-    private final static int TAKE_PHOTO=150;
-    private final static int Referer=200;
-    private final static int UPLOAD_IMAGE=201;
-    private final static int ScanCode=202;
-    private final static int Token=110;
-    private boolean flag=false;
-    private FirstApplication mFirstApplication=FirstApplication.getInstance();
-    String[] PERMISSON=new String[]{
+    private final static int SIGN0 = 100;
+    private final static int SIGN1 = 101;
+    private final static int SIGN4 = 104;
+    private final static int TAKE_PHOTO = 150;
+    private final static int Referer = 200;
+    private final static int UPLOAD_IMAGE = 201;
+    private final static int ScanCode = 202;
+    private final static int Token = 110;
+    private boolean flag = false;
+    private FirstApplication mFirstApplication = FirstApplication.getInstance();
+    String[] PERMISSON = new String[]{
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private String objectId;
     private String token;
     @SuppressLint("HandlerLeak")
-    private final Handler handler=new Handler(){
+    private final Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case SIGN0:
-                    ResponseInfo info =(ResponseInfo) msg.obj;
-                    if(info.BodyInfo.contains("签到成功"))
-                    {
+                    ResponseInfo info = (ResponseInfo) msg.obj;
+                    if (info.BodyInfo.contains("签到成功")) {
                         promptDialog.showSuccess("签到成功！");
                         Toast.makeText(Sign.this, "签到成功！", Toast.LENGTH_SHORT).show();
                         finish();
-                    }else {
+                    } else {
                         promptDialog.showError("未知错误~");
                         Toast.makeText(Sign.this, "", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case SIGN1:
-                    ResponseInfo info1=(ResponseInfo) msg.obj;
-                    Log.e("SIGN1",info1.BodyInfo);
+                    ResponseInfo info1 = (ResponseInfo) msg.obj;
+                    Log.e("SIGN1", info1.BodyInfo);
                     promptDialog.showSuccess("签到成功！");
                     Toast.makeText(Sign.this, "签到成功！", Toast.LENGTH_SHORT).show();
                     finish();
                     break;
                 case SIGN4:
-                    ResponseInfo info4=(ResponseInfo) msg.obj;
-                    Log.e("SIGN4",info4.BodyInfo);
+                    ResponseInfo info4 = (ResponseInfo) msg.obj;
+                    Log.e("SIGN4", info4.BodyInfo);
                     Toast.makeText(mFirstApplication, info4.BodyInfo, Toast.LENGTH_SHORT).show();
-                    if(info4.BodyInfo.equals("success")){
+                    if (info4.BodyInfo.equals("success")) {
                         promptDialog.showSuccess("签到成功！");
                         Toast.makeText(Sign.this, "签到成功！", Toast.LENGTH_SHORT).show();
                         finish();
-                    }else {
+                    } else {
                         promptDialog.showError(info4.BodyInfo);
                         Toast.makeText(Sign.this, info4.BodyInfo, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case Referer:
-                    flag=true;
+                    flag = true;
                     sign();
                     break;
                 case UPLOAD_IMAGE:
-                    ResponseInfo info9=(ResponseInfo) msg.obj;
-                    JSONObject jsonObject= JSONObject.parseObject(info9.BodyInfo);
-                    if(jsonObject.getString("msg").equals("success")){
+                    ResponseInfo info9 = (ResponseInfo) msg.obj;
+                    JSONObject jsonObject = JSONObject.parseObject(info9.BodyInfo);
+                    if (jsonObject.getString("msg").equals("success")) {
                         promptDialog.showSuccess("上传成功！");
                         objectId = jsonObject.getString("objectId");
-                    }else {
+                    } else {
                         promptDialog.showError("上传失败...未知错误");
                     }
                     break;
                 case Token:
-                    ResponseInfo info10=(ResponseInfo) msg.obj;
-                    Log.e("Token",info10.BodyInfo);
-                    JSONObject jsonObject10=JSONObject.parseObject(info10.BodyInfo);
+                    ResponseInfo info10 = (ResponseInfo) msg.obj;
+                    Log.e("Token", info10.BodyInfo);
+                    JSONObject jsonObject10 = JSONObject.parseObject(info10.BodyInfo);
                     token = jsonObject10.getString("_token");
                     break;
             }
@@ -136,9 +134,10 @@ public class Sign extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        TextView sign_name=findViewById(R.id.sign_name);
-        TextView sign_course_name=findViewById(R.id.sign_course_name);
-        Intent intent=getIntent();
+        TextView sign_name = findViewById(R.id.sign_name);
+        TextView sign_course_name = findViewById(R.id.sign_course_name);
+        TextView hint=findViewById(R.id.hint);
+        Intent intent = getIntent();
         sign_course_name.setText(intent.getStringExtra("name"));
         aid = intent.getStringExtra("aid");
         sign_code = String.valueOf(getIntent().getStringExtra("sign_code"));
@@ -148,8 +147,8 @@ public class Sign extends AppCompatActivity {
         findViewById(R.id.sign_button).setOnClickListener(v -> {
             sign();
         });
-        if(content!=null)
-            content=content.replace("\\","");
+        if (content != null)
+            content = content.replace("\\", "");
 
         promptDialog = new PromptDialog(this);
 
@@ -162,28 +161,50 @@ public class Sign extends AppCompatActivity {
         wei = findViewById(R.id.wei);
         address = findViewById(R.id.address);
         shared_address = getSharedPreferences("account_and_password", MODE_PRIVATE);
-        if(shared_address.contains("address")){
+        if (shared_address.contains("address")) {
             address.setText(shared_address.getString("address", ""));
         }
 
-        if(content!=null){
-            JSONObject con=JSONObject.parseObject(content);
+        if (content != null&&content.length()>25) {
+            JSONObject con = JSONObject.parseObject(content);
             jing.setText(con.getString("locationLongitude"));
             wei.setText(con.getString("locationLatitude"));
         }
 
         //获取token
-        Network.getSync("https://pan-yz.chaoxing.com/api/token/uservalid",handler,Token);
+        Network.getSync("https://pan-yz.chaoxing.com/api/token/uservalid", handler, Token);
 
         //设置签到类型名称
         sign_name.setText(getIntent().getStringExtra("sign_name"));
-        type = getIntent().getIntExtra("sign_type",0);
-        if(type==4){
-            tv_sign_code.setText("签到手势是:"+sign_code);
-            tv_sign_code.setVisibility(View.VISIBLE);
-        }else if(type==6){
-            tv_sign_code.setText("签到码是:"+sign_code);
-            tv_sign_code.setVisibility(View.VISIBLE);
+        type = getIntent().getIntExtra("sign_type", 0);
+
+
+        switch (type) {
+            case 0:
+                hint.setText("直接点击签到即可！");
+                break;
+            case 1:
+                imageView.setVisibility(View.VISIBLE);
+                hint.setText("从相册选择图片后点击签到按钮\n如果直接点击签到为不上传图片！");
+                break;
+            case 2:
+            case 3:
+                hint.setText("请点击签到按钮\n然后选择直接扫码或者相册打开图片\n如果二维码图片不清晰，请多试几次");
+                break;
+            case 4:
+                tv_sign_code.setText("签到手势是:" + sign_code);
+                tv_sign_code.setVisibility(View.VISIBLE);
+                hint.setText("直接点击签到即可，手势可以分享小伙伴！");
+                break;
+            case 5:
+                findViewById(R.id.dingwei).setVisibility(View.VISIBLE);
+                hint.setText("一定要修改地址显示\n这是老师可以看到的定位信息\n经纬度默认是签到范围的中心点\n如果教师未指定位置请自行设定经纬度");
+                break;
+            case 6:
+                tv_sign_code.setText("签到码是:" + sign_code);
+                tv_sign_code.setVisibility(View.VISIBLE);
+                hint.setText("直接点击签到即可，签到码可以分享小伙伴！");
+                break;
         }
     }
 

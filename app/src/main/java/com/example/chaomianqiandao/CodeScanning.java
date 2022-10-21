@@ -1,10 +1,12 @@
 package com.example.chaomianqiandao;
 
 
+import static com.example.chaomianqiandao.utils.Fileutils.getRealFilePathFromUri;
 import static com.example.chaomianqiandao.utils.PermissionUtil.checkGrant;
 import static com.example.chaomianqiandao.utils.PermissionUtil.checkPermissions;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,12 +19,14 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.chaomianqiandao.utils.ClipImageActivity;
 import com.example.chaomianqiandao.utils.Fileutils;
 import com.example.chaomianqiandao.utils.Network;
 import com.google.zxing.Binarizer;
@@ -42,6 +46,7 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
 public class CodeScanning extends AppCompatActivity implements QRCodeView.Delegate {
 
     private final static int TAKE_PHOTO=150;
+    private final static int REQUEST_CROP_PHOTO=151;
     //通讯录所需要的权限
     private final String[] PERMISSION_SCAN=new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -50,35 +55,22 @@ public class CodeScanning extends AppCompatActivity implements QRCodeView.Delega
             Manifest.permission.VIBRATE
     };
     private ZXingView scanner;
-    private ImageView album;
-    private String realPath;
-    private QRCodeReader reader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanning);
         scanner = findViewById(R.id.scanner);
-        ImageView album= findViewById(R.id.album);
-        album.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoPic();
-            }
-        });
+        TextView album= findViewById(R.id.album);
+        album.setOnClickListener(v -> gotoPic());
         //检查权限
         checkPermissions(this,PERMISSION_SCAN,1);
-
-        reader = new QRCodeReader();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         scanner.setDelegate(CodeScanning.this);
-
-
     }
 
     @Override
@@ -118,9 +110,7 @@ public class CodeScanning extends AppCompatActivity implements QRCodeView.Delega
             startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"),
                     TAKE_PHOTO);
         } else {
-//            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             Intent intent = new Intent(Intent.ACTION_PICK);
-//            intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
             startActivityForResult(intent, TAKE_PHOTO);
         }
@@ -141,12 +131,13 @@ public class CodeScanning extends AppCompatActivity implements QRCodeView.Delega
     @Override
     public void onScanQRCodeSuccess(String result) {
         vibrate();
-        Log.e("CodeScanning",result);
         Intent intent=new Intent();
         intent.putExtra("result",result);
         setResult(RESULT_OK,intent);
         finish();
     }
+
+
 
     //摄像头亮度变化
     @Override
@@ -168,48 +159,34 @@ public class CodeScanning extends AppCompatActivity implements QRCodeView.Delega
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
-            realPath = Fileutils.getRealFilePathFromUri(this,data.getData());
-            File file=new File(realPath);
-            Bitmap bitmap= BitmapFactory.decodeFile(realPath);
-            int width=bitmap.getWidth();
-            int scale=width/500;
-            BitmapFactory.Options options=new BitmapFactory.Options();
-            options.inSampleSize=scale;
-            String[] s=realPath.split("\\.");
-            String format=s[s.length-1];
-            //文件大于 1mb
-            if(scale>1||file.length()>500*1000){
-
-                String fileName= Fileutils.checkDirPath(CodeScanning.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)+"/image")+System.currentTimeMillis()+"."+format;
-                if(format.startsWith("jp")){
-                    try {
-                        OutputStream os=new FileOutputStream(fileName);
-                        bitmap=BitmapFactory.decodeFile(realPath,options);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG,60,os);
-                        os.close();
-                        scanner.decodeQRCode(BitmapFactory.decodeFile(fileName));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else if (format.startsWith("png")){
-                    try {
-                        OutputStream os=new FileOutputStream(fileName);
-                        bitmap=BitmapFactory.decodeFile(realPath,options);
-                        bitmap.compress(Bitmap.CompressFormat.PNG,60,os);
-                        os.close();
-                        scanner.decodeQRCode(BitmapFactory.decodeFile(fileName));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (resultCode!=RESULT_OK)
+            return;
+        switch (requestCode){
+            case TAKE_PHOTO:
+                gotoClipActivity(data.getData());
+                break;
+            case REQUEST_CROP_PHOTO:
+                final Uri uri = data.getData();
+                if (uri == null) {
+                    return;
                 }
-            }else{
-                scanner.decodeQRCode(BitmapFactory.decodeFile(realPath));
-            }
+                String cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
+                Log.e("crop",cropImagePath);
+                Bitmap bitMap = BitmapFactory.decodeFile(cropImagePath);
+                scanner.decodeQRCode(bitMap);
+                break;
         }
-        else{
-                 Toast.makeText(CodeScanning.this, "选择照片失败！", Toast.LENGTH_SHORT).show();
-        }
+    }
 
+
+    public void gotoClipActivity(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        Intent intent = new Intent();
+        intent.setClass(this, ClipImageActivity.class);
+        intent.putExtra("type", 2);
+        intent.setData(uri);
+        startActivityForResult(intent, REQUEST_CROP_PHOTO);
     }
 }
