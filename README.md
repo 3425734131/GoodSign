@@ -6,32 +6,31 @@
 
 ### 拍照签到
 
-<img src=".\README_IMG\photo.gif" alt="photo" style="zoom: 33%;" align="left" height="20%" width="20%"/>
-
+<img src=".\README_IMG\photo.gif" alt="photo"  align="left"  width="20%"/>
 
 #### 不上传图片，教师端：(教师端不显示图片)
 
-<img src=".\README_IMG\IMG20221110102046.jpg" align="left" alt="Snipaste_2022-11-10_10-18-13"  />
-<img src=".\README_IMG\stickPicture (1).png" align="left" alt="stickPicture (1)"   /> 
+<img src=".\README_IMG\IMG20221110102046.jpg" align="left" alt="Snipaste_2022-11-10_10-18-13" width="40%"  />
+<img src=".\README_IMG\stickPicture (1).png" align="left" alt="stickPicture (1)" width="40%"  /> 
 
 
 
 ### 从相册选择任意图片，教师端正常显示：
 
-<img src=".\README_IMG\stickPicture.png" align="left" alt="stickPicture"  />
+<img src=".\README_IMG\stickPicture.png" align="left" alt="stickPicture" width="40%" />
 
 
 ### 定位签到（真正的）自定义地址:
 
 这里的经纬度是从学习通后端拿到的数据，是签到范围的中心点，所以地址填什么都能签到成功！（经纬度是判断是否在范围内的依据）
 
-<img src=".\README_IMG\4A145DC833F43A40215A60A3C51D5E6E.jpg" alt="3B5445BD53FDAE09B16FBB5C215E4380" align="left"  />
+<img src=".\README_IMG\4A145DC833F43A40215A60A3C51D5E6E.jpg" alt="3B5445BD53FDAE09B16FBB5C215E4380" align="left" width="40%" />
 
 ### 自动签到
 
 在我的页面打开开关后，即可进入懒人模式：除了拍照签到，其他签到在打开软件后会自动签到。
 
-<img src=".\README_IMG\Screenshot_2022-11-10-10-32-17-430_com.example.chaomianqiandao.jpg" align="left" alt="Screenshot_2022-11-10-10-32-17-430_com.example.chaomianqiandao" " />
+<img src=".\README_IMG\Screenshot_2022-11-10-10-32-17-430_com.example.chaomianqiandao.jpg" align="left" alt="Screenshot_2022-11-10-10-32-17-430_com.example.chaomianqiandao" width="40%" />
 
 ### 手势签到和签到码签到
 
@@ -39,9 +38,9 @@
 
 签到码和手势都是从学习通后端直接获取，没毛病老弟！！
 
-<img src=".\README_IMG\084A757E6511502C0AF47719D7F3E38D.jpg" alt="084A757E6511502C0AF47719D7F3E38D" align="left"  />
+<img src=".\README_IMG\084A757E6511502C0AF47719D7F3E38D.jpg" alt="084A757E6511502C0AF47719D7F3E38D" align="left" width="40%"  />
 
-<img src=".\README_IMG\395E2FAFB930B23C0F3088F56520CE1E.jpg" alt="084A757E6511502C0AF47719D7F3E38D" align="left"  />
+<img src=".\README_IMG\395E2FAFB930B23C0F3088F56520CE1E.jpg" alt="084A757E6511502C0AF47719D7F3E38D" align="left" width="40%" />
 
 ## 软件特点
 
