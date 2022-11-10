@@ -42,6 +42,9 @@
 
 <img src=".\README_IMG\084A757E6511502C0AF47719D7F3E38D.jpg" alt="084A757E6511502C0AF47719D7F3E38D"  width="40%"  />
 
+### 日志系统
+
+<img src=".\README_IMG\log.png" alt="084A757E6511502C0AF47719D7F3E38D"  width="40%"  />
 
 ## 软件特点
 
