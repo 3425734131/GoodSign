@@ -98,6 +98,7 @@ v1.3.1 新增未交作业功能、优化日志系统 https://wwp.lanzoup.com/iAQ
 
 ## 鸣谢
 
-代码部分全部是自己抓包分析原创。软件的界面布局和文档编写参考了下面的项目，写的也十分好！
+代码部分全部是自己抓包分析原创。软件的功能、界面布局和文档编写参考了下面的项目，写的也十分好！
 
 * https://github.com/james-curtis/chaoxing-sign-app
+* https://github.com/morning-start/XueXiTong
