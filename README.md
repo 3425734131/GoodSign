@@ -54,7 +54,7 @@
 
 <img src=".\README_IMG\meeting.gif" alt="084A757E6511502C0AF47719D7F3E38D"  width="40%"  />
 
-##  多账号同时签到
+##  多账号代签（一键签多个账号）
 
 <img src=".\README_IMG\IMG_20230106_182833.jpg" alt="084A757E6511502C0AF47719D7F3E38D"  width="40%"  />
 
