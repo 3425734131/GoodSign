@@ -148,7 +148,7 @@ v1.5.0 更新于 2022年12月1日......
 
 ## 捐赠作者
 
-<img src=".\README_IMG\zhifu.jpg" alt="65C9E84C77254D11DB1436B946E318E7"  width="40%"  />
+<img src=".\README_IMG\zhifu.jpg" alt="65C9E84C77254D11DB1436B946E318E7"  width="30%"  />
 
 ## 声明
 
